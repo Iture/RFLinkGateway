@@ -1,13 +1,15 @@
+import json
+import logging
 import multiprocessing
 import time
 
-import MQTTClient
-import SerialProcess
 import tornado.gen
 import tornado.ioloop
 import tornado.websocket
 from tornado.options import options
-import logging
+
+import MQTTClient
+import SerialProcess
 
 logger = logging.getLogger('RFLinkGW')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s')
@@ -29,11 +31,19 @@ def main():
     # messages written to device
     commandQ = multiprocessing.Queue()
 
-    sp = SerialProcess.SerialProcess(messageQ, commandQ)
+    config = {}
+    try:
+        with open('config.json') as json_data:
+            config = json.load(json_data)
+    except Exception as e:
+        logger.error("Config load failed")
+        exit(1)
+
+    sp = SerialProcess.SerialProcess(messageQ, commandQ, config)
     sp.daemon = True
     sp.start()
 
-    mqtt = MQTTClient.MQTTClient(messageQ, commandQ)
+    mqtt = MQTTClient.MQTTClient(messageQ, commandQ, config)
     mqtt.daemon = True
     mqtt.start()
 
