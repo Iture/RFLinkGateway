@@ -1,0 +1,17 @@
+{
+  "mqtt_host": "malinka.home",
+  "mqtt_port": 1883,
+  "mqtt_prefix": "/data/RFLINK",
+  "mqtt_message_timeout": 60,
+  "rflink_tty_device": "/dev/ttyUSB0",
+  "rflink_ignored_devices": [
+    "BAT",
+    "CMD",
+    "SET_LEVEL",
+    "SWITCH",
+    "HUM",
+    "CHIME",
+    "PIR",
+    "SMOKEALERT"
+  ]
+}

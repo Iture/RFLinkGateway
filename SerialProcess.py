@@ -4,25 +4,25 @@ import time
 
 import serial
 
+
 #TODO keepalive i obsluga resetu
 
 
 class SerialProcess(multiprocessing.Process):
-    def __init__(self, messageQ, commandQ):
+    def __init__(self, messageQ, commandQ, config):
         self.logger = logging.getLogger('RFLinkGW.SerialProcessing')
 
         self.logger.info("Starting...")
-
         multiprocessing.Process.__init__(self)
 
         self.messageQ = messageQ
         self.commandQ = commandQ
 
-        self.gatewayPort = '/dev/ttyUSB0'
+        self.gatewayPort = config['rflink_tty_device']
         self.sp = serial.Serial()
         self.connect()
 
-        self.processing_exception = ['BAT', 'CMD', 'SET_LEVEL', 'SWITCH', 'HUM', 'CHIME', 'PIR', 'SMOKEALERT']
+        self.processing_exception = config['rflink_direct_output_params']
 
     def close(self):
         self.sp.close()
@@ -52,7 +52,8 @@ class SerialProcess(multiprocessing.Process):
                     'deviceId': deviceId,
                     'param': key,
                     'payload': val,
-                    'qos': 1
+                    'qos': 1,
+                    'timestamp': time.time()
                 }
                 out = out + [data_out]
         return out

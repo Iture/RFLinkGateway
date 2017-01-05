@@ -7,7 +7,7 @@ import paho.mqtt.publish as publish
 
 
 class MQTTClient(multiprocessing.Process):
-    def __init__(self, messageQ, commandQ):
+    def __init__(self, messageQ, commandQ, config):
         self.logger = logging.getLogger('RFLinkGW.MQTTClient')
         self.logger.info("Starting...")
 
@@ -15,9 +15,9 @@ class MQTTClient(multiprocessing.Process):
         self.messageQ = messageQ
         self.commandQ = commandQ
 
-        self.mqttDataPrefix = '/data/RFLINK'
+        self.mqttDataPrefix = config['mqtt_prefix']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
-        self._mqttConn.connect('127.0.0.1', port=1883, keepalive=120)
+        self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
         self._mqttConn.on_message = self._on_message
@@ -59,14 +59,12 @@ class MQTTClient(multiprocessing.Process):
             self.messageQ.put(task)
 
     def run(self):
-        # self._mqttConn.message_callback_add("/data/RFLINK/+/+/W/+", self._on_message)
-        self._mqttConn.subscribe("/data/RFLINK/+/+/W/+")
+        self._mqttConn.subscribe("%s/+/+/W/+" % self.mqttDataPrefix)
         while True:
             if not self.messageQ.empty():
                 task = self.messageQ.get()
                 if task['method'] == 'publish':
                     self.publish(task)
             else:
-                # self._mqttConn.loop_read()
                 time.sleep(0.01)
             self._mqttConn.loop()
