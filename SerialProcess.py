@@ -12,7 +12,6 @@ class SerialProcess(multiprocessing.Process):
         self.logger = logging.getLogger('RFLinkGW.SerialProcessing')
 
         self.logger.info("Starting...")
-
         multiprocessing.Process.__init__(self)
 
         self.messageQ = messageQ
