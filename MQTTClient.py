@@ -3,7 +3,6 @@ import multiprocessing
 import time
 
 import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
 
 
 class MQTTClient(multiprocessing.Process):
@@ -12,8 +11,8 @@ class MQTTClient(multiprocessing.Process):
         self.logger.info("Starting...")
 
         multiprocessing.Process.__init__(self)
-        self.messageQ = messageQ
-        self.commandQ = commandQ
+        self.__messageQ = messageQ
+        self.__commandQ = commandQ
 
         self.mqttDataPrefix = config['mqtt_prefix']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
@@ -47,22 +46,22 @@ class MQTTClient(multiprocessing.Process):
             'payload': message.payload.decode('ascii'),
             'qos': 1
         }
-        self.commandQ.put(data_out)
+        self.__commandQ.put(data_out)
 
     def publish(self, task):
         topic = "%s/%s/%s/R/%s" % (self.mqttDataPrefix, task['family'], task['deviceId'], task['param'])
         try:
-            publish.single(topic, payload=task['payload'])
+            self._mqttConn.publish(topic, payload=task['payload'])
             self.logger.debug('Sending:%s' % (task))
         except Exception as e:
             self.logger.error('Publish problem: %s' % (e))
-            self.messageQ.put(task)
+            self.__messageQ.put(task)
 
     def run(self):
         self._mqttConn.subscribe("%s/+/+/W/+" % self.mqttDataPrefix)
         while True:
-            if not self.messageQ.empty():
-                task = self.messageQ.get()
+            if not self.__messageQ.empty():
+                task = self.__messageQ.get()
                 if task['method'] == 'publish':
                     self.publish(task)
             else:
