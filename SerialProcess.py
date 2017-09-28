@@ -67,6 +67,7 @@ class SerialProcess(multiprocessing.Process):
         self.logger.info('Connecting to serial')
         while not self.sp.isOpen():
             try:
+                time.sleep(1)
                 self.sp = serial.Serial(self.gatewayPort, 57600, timeout=1)
                 self.logger.debug('Serial connected')
             except Exception as e:
