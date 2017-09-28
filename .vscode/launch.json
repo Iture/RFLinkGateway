@@ -6,7 +6,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
-            "pythonPath": "${config.python.pythonPath}",
+            "pythonPath": "python3",
             "program": "${file}",
             "debugOptions": [
                 "WaitOnAbnormalExit",
@@ -19,7 +19,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": true,
-            "pythonPath": "${config.python.pythonPath}",
+            "pythonPath": "python3",
             "program": "${file}",
             "console": "integratedTerminal",
             "debugOptions": [
