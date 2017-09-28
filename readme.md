@@ -1,9 +1,9 @@
-#RFLink Gateway to MQTT
+# RFLink Gateway to MQTT
 
-##Purpose
+## Purpose
 Bridge between RFLink Gateway and MQTT broker.
 
-##Current features
+## Current features
 Forwarding messages received on TTY port from RFLink Gateway Arduino board
 to MQTT broker in both directions.
 
@@ -27,7 +27,7 @@ Message:
 Every message received on particular MQTT topic is translated to
 RFLink Gateway and sent to 433 MHz.
 
-##Configuration
+## Configuration
 
 Whole configuration is located in config.json file.
 
@@ -49,7 +49,7 @@ config param | meaning
 | rflink_tty_device | Arduino tty device |
 | rflink_ignored_devices | Parameters transferred to MQTT without any processing|
 
-##Output data
+## Output data
 Application pushes informations to MQTT broker in following format:
 [mqtt_prefix]/[device_type]/[device_id]/R/[parameter]
 
@@ -61,6 +61,6 @@ Every change should be published to topic:
 `/data/RFLINK/TriState/8556a8/W/1 ON`
 
 
-##References
+## References
 - RFLink Gateway project http://www.nemcon.nl/blog2/
 - RFLink Gateway protocol http://www.nemcon.nl/blog2/protref
