@@ -15,8 +15,8 @@ class SerialProcess(multiprocessing.Process):
         self.logger.info("Starting...")
         multiprocessing.Process.__init__(self)
 
-        self.messageQ = messageQ
-        self.commandQ = commandQ
+        self.__messageQ = messageQ
+        self.__commandQ = commandQ
 
         self.gatewayPort = config['rflink_tty_device']
         self.sp = serial.Serial()
@@ -67,6 +67,7 @@ class SerialProcess(multiprocessing.Process):
         self.logger.info('Connecting to serial')
         while not self.sp.isOpen():
             try:
+                time.sleep(1)
                 self.sp = serial.Serial(self.gatewayPort, 57600, timeout=1)
                 self.logger.debug('Serial connected')
             except Exception as e:
@@ -76,8 +77,8 @@ class SerialProcess(multiprocessing.Process):
         self.sp.flushInput()
         while True:
             try:
-                if not self.commandQ.empty():
-                    task = self.commandQ.get()
+                if not self.__commandQ.empty():
+                    task = self.__commandQ.get()
                     # send it to the serial device
                     self.sp.write(self.prepare_input(task).encode('ascii'))
             except Exception as e:
@@ -88,7 +89,7 @@ class SerialProcess(multiprocessing.Process):
                     task_list = self.prepare_output(data)
                     for task in task_list:
                         self.logger.debug("Sending to Q:%s" % (task))
-                        self.messageQ.put(task)
+                        self.__messageQ.put(task)
                 else:
                     time.sleep(0.01)
             except Exception as e:

@@ -4,3 +4,6 @@
 .idea/RFLinkGateway.iml
 .idea/vcs.xml
 .idea/workspace.xml
+*.pyc
+RFLinkGateway.log
+RFLinkGateway.log
