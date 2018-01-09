@@ -49,7 +49,7 @@ class MQTTClient(multiprocessing.Process):
         self.__commandQ.put(data_out)
 
     def publish(self, task):
-        topic = "%s/%s/%s/R/%s" % (self.mqttDataPrefix, task['family'], task['deviceId'], task['param'])
+        topic = "%s/%s" % (self.mqttDataPrefix, task['topic'])
         try:
             self._mqttConn.publish(topic, payload=task['payload'])
             self.logger.debug('Sending:%s' % (task))
