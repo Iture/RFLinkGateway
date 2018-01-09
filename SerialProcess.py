@@ -5,6 +5,7 @@ import time
 import serial
 
 
+
 #TODO keepalive i obsluga resetu
 
 
@@ -35,6 +36,7 @@ class SerialProcess(multiprocessing.Process):
         if len(data) > 3 and data[0] == '20':
             family = data[2]
             deviceId = data[3].split("=")[1]
+            switch = data[4].split("=")[1]
             d = {}
             for t in data[4:]:
                 token = t.split("=")
@@ -44,7 +46,12 @@ class SerialProcess(multiprocessing.Process):
                     val = d[key]
                 else:
                     val = int(d[key], 16) / 10
-                topic_out = "%s/%s/READ/%s" % (family, deviceId, key)
+                if key == "CMD":
+                    topic_out = "%s/%s/%s/READ/%s" % (family, deviceId, switch, key)
+                    
+                else:
+                    topic_out = "%s/%s/READ/%s" % (family, deviceId, key)
+                self.logger.debug('set topic to: %s' % (topic_out))
                 data_out = {
                     'method': 'publish',
                     'topic': topic_out,
