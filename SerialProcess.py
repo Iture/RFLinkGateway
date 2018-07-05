@@ -46,11 +46,11 @@ class SerialProcess(multiprocessing.Process):
                     val = d[key]
                 elif key in self.processing_signed:
                     if int(d[key], 16) & 0x8000:
-                        val = -(int(d[key], 16) & 0x7FFF) / 10
+                        val = float -( (int(d[key], 16) & 0x7FFF)) / 10
                     else:
-                        val = int(d[key], 16) / 10
+                        val = float (int(d[key], 16)) / 10
                 else:
-                    val = int(d[key], 16) / 10
+                    val = float (int(d[key], 16)) / 10
                 topic_out = "%s/%s/READ/%s" % (family, deviceId, key)
                 data_out = {
                     'method': 'publish',
