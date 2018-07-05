@@ -37,7 +37,8 @@ Whole configuration is located in config.json file.
   "mqtt_port": 1883,
   "mqtt_prefix": "/data/RFLINK",
   "rflink_tty_device": "/dev/ttyUSB0",
-  "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"]
+  "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"],
+  "rflink_signed_output_params": ["TEMP", "WINCHL", "WINTMP"]
 }
 ```
 
@@ -47,7 +48,8 @@ config param | meaning
 | mqtt_port | MQTT broker port|
 | mqtt_prefix | prefix for publish and subscribe topic|
 | rflink_tty_device | Arduino tty device |
-| rflink_ignored_devices | Parameters transferred to MQTT without any processing|
+| rflink_direct_output_params | Parameters transferred to MQTT without any processing |
+| rflink_signed_output_params | Parameters with signed values |
 
 ## Output data
 Application pushes informations to MQTT broker in following format:
@@ -62,5 +64,5 @@ Every change should be published to topic:
 
 
 ## References
-- RFLink Gateway project http://www.nemcon.nl/blog2/
-- RFLink Gateway protocol http://www.nemcon.nl/blog2/protref
+- RFLink Gateway project http://www.rflink.nl/
+- RFLink Gateway protocol http://www.rflink.nl/blog2/protref
