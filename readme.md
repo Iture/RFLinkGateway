@@ -62,5 +62,5 @@ Every change should be published to topic:
 
 
 ## References
-- RFLink Gateway project http://www.nemcon.nl/blog2/
-- RFLink Gateway protocol http://www.nemcon.nl/blog2/protref
+- RFLink Gateway project http://www.rflink.nl/
+- RFLink Gateway protocol http://www.rflink.nl/blog2/protref
