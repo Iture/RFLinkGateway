@@ -38,7 +38,7 @@ Whole configuration is located in config.json file.
   "mqtt_prefix": "/data/RFLINK",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"],
-  "rflink_signed_output_params": ["TEMP","WINCHL","WINTMP"]
+  "rflink_signed_output_params": ["TEMP", "WINCHL", "WINTMP"]
 }
 ```
 
