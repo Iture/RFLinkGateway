@@ -13,5 +13,10 @@
     "CHIME",
     "PIR",
     "SMOKEALERT"
-  ]
+  ],
+  "rflink_signed_output_params": [
+    "TEMP",
+    "WINCHL",
+    "WINTMP"
+  ],
 }

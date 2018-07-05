@@ -24,9 +24,18 @@ class SerialProcess(multiprocessing.Process):
 
         self.processing_exception = config['rflink_direct_output_params']
 
+        self.processing_signed = config['rflink_signed_output_params']
+
     def close(self):
         self.sp.close()
         self.logger.debug('Serial closed')
+
+    def signed_to_float(hex: str) -> float:
+        """Convert signed hexadecimal to floating value."""
+        if int(hex, 16) & 0x8000:
+            return -(int(hex, 16) & 0x7FFF) / 10
+        else:
+            return int(hex, 16) / 10
 
     def prepare_output(self, data_in):
         out = []
@@ -42,6 +51,8 @@ class SerialProcess(multiprocessing.Process):
             for key in d:
                 if key in self.processing_exception:
                     val = d[key]
+                elif key in self.processing_signed:
+                    val = signed_to_float(d[key])
                 else:
                     val = int(d[key], 16) / 10
                 topic_out = "%s/%s/READ/%s" % (family, deviceId, key)
