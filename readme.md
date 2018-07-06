@@ -38,7 +38,8 @@ Whole configuration is located in config.json file.
   "mqtt_prefix": "/data/RFLINK",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"],
-  "rflink_signed_output_params": ["TEMP", "WINCHL", "WINTMP"]
+  "rflink_signed_output_params": ["TEMP", "WINCHL", "WINTMP"],
+  "rflink_wdir_output_params": ["WINDIR"]
 }
 ```
 
@@ -50,6 +51,7 @@ config param | meaning
 | rflink_tty_device | Arduino tty device |
 | rflink_direct_output_params | Parameters transferred to MQTT without any processing |
 | rflink_signed_output_params | Parameters with signed values |
+| rflink_wdir_output_params | Parameters with wind direction values |
 
 ## Output data
 Application pushes informations to MQTT broker in following format:

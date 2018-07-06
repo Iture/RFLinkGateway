@@ -18,5 +18,8 @@
     "TEMP",
     "WINCHL",
     "WINTMP"
+  ],
+  "rflink_wdir_output_params": [
+    "WINDIR"
   ]
 }
