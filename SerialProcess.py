@@ -46,7 +46,7 @@ class SerialProcess(multiprocessing.Process):
                     val = d[key]
                 elif key in self.processing_signed:
                     if int(d[key], 16) & 0x8000:
-                        val = float -( (int(d[key], 16) & 0x7FFF)) / 10
+                        val = -( float (int(d[key], 16) & 0x7FFF) / 10 )
                     else:
                         val = float (int(d[key], 16)) / 10
                 else:
