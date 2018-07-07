@@ -36,6 +36,7 @@ Whole configuration is located in config.json file.
   "mqtt_host": "your.mqtt.host",
   "mqtt_port": 1883,
   "mqtt_prefix": "/data/RFLINK",
+  "mqtt_format": "json",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"],
   "rflink_signed_output_params": ["TEMP", "WINCHL", "WINTMP"],
@@ -48,6 +49,7 @@ config param | meaning
 | mqtt_host | MQTT broker host |
 | mqtt_port | MQTT broker port|
 | mqtt_prefix | prefix for publish and subscribe topic|
+| mqtt_format | publish and subscribe topic as json |
 | rflink_tty_device | Arduino tty device |
 | rflink_direct_output_params | Parameters transferred to MQTT without any processing |
 | rflink_signed_output_params | Parameters with signed values |
