@@ -21,7 +21,8 @@ Message:
 
  `/data/RFLINK/Oregon Rain2/2a19/R/BAT OK`
   
-`20;37;Acurite;ID=cbd5;TEMP=0066;HUM=79;WINSP=001a;BAT=OK`
+`20;37;Acurite;ID=cbd5;TEMP=0066;HUM=79;WINSP=001a;BAT=OK`  
+  
 ```ascii```
 ```
 /data/RFLINK/Acurite/cbd5/R/TEMP 10.2
@@ -73,7 +74,7 @@ config param | meaning
 Application pushes informations to MQTT broker in following format:
 [mqtt_prefix]/[device_type]/[device_id]/R/[parameter]
 
-`/data/RFLINK/TriState/8556a8/W/1 OFF`
+`/data/RFLINK/TriState/8556a8/R/1 OFF`
 
 Every change should be published to topic:
 [mqtt_prefix]/[device_type]/[device_id]/W/[switch_ID]
