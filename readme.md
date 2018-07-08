@@ -20,10 +20,24 @@ Message:
  `/data/RFLINK/Oregon Rain2/2a19/R/RAINTOT 0054`
 
  `/data/RFLINK/Oregon Rain2/2a19/R/BAT OK`
-
-
-
-
+  
+`20;37;Acurite;ID=cbd5;TEMP=0066;HUM=79;WINSP=001a;BAT=OK`
+```ascii```
+```
+/data/RFLINK/Acurite/cbd5/R/TEMP 10.2
+/data/RFLINK/Acurite/cbd5/R/HUM 73
+/data/RFLINK/Acurite/cbd5/R/WINSP 2.6
+/data/RFLINK/Acurite/cbd5/R/BAT OK
+```
+  
+```json```
+```
+/data/RFLINK/Acurite/cbd5/R/TEMP {"value": 10.2}
+/data/RFLINK/Acurite/cbd5/R/HUM {"value": 73}
+/data/RFLINK/Acurite/cbd5/R/WINSP {"value": 2.6}
+/data/RFLINK/Acurite/cbd5/R/BAT {"value": "OK"}
+```
+  
 Every message received on particular MQTT topic is translated to
 RFLink Gateway and sent to 433 MHz.
 
