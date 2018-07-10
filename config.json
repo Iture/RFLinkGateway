@@ -2,6 +2,7 @@
   "mqtt_host": "malinka.home",
   "mqtt_port": 1883,
   "mqtt_prefix": "/data/RFLINK",
+  "mqtt_format": "json",
   "mqtt_message_timeout": 60,
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": [
@@ -18,5 +19,8 @@
     "TEMP",
     "WINCHL",
     "WINTMP"
+  ],
+  "rflink_wdir_output_params": [
+    "WINDIR"
   ]
 }

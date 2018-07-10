@@ -26,6 +26,8 @@ class SerialProcess(multiprocessing.Process):
 
         self.processing_signed = config['rflink_signed_output_params']
 
+        self.processing_wdir = config['rflink_wdir_output_params']
+
     def close(self):
         self.sp.close()
         self.logger.debug('Serial closed')
@@ -45,12 +47,17 @@ class SerialProcess(multiprocessing.Process):
                 if key in self.processing_exception:
                     val = d[key]
                 elif key in self.processing_signed:
+                    # Hexadecimal, high bit contains negative sign, division by 10
                     if int(d[key], 16) & 0x8000:
-                        val = -(int(d[key], 16) & 0x7FFF) / 10
+                        val = -( float (int(d[key], 16) & 0x7FFF) / 10 )
                     else:
-                        val = int(d[key], 16) / 10
+                        val = float (int(d[key], 16)) / 10
+                elif key in self.processing_wdir:
+                    # Integer value from 0-15, reflecting 0-360 degrees in 22.5 degree steps
+                    val = int(d[key], 10) * 22.5
                 else:
-                    val = int(d[key], 16) / 10
+                    # Hexadecimal, division by 10
+                    val = float (int(d[key], 16)) / 10
                 topic_out = "%s/%s/READ/%s" % (family, deviceId, key)
                 data_out = {
                     'method': 'publish',

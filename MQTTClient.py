@@ -4,6 +4,21 @@ import time
 
 import paho.mqtt.client as mqtt
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
 
 class MQTTClient(multiprocessing.Process):
     def __init__(self, messageQ, commandQ, config):
@@ -15,6 +30,7 @@ class MQTTClient(multiprocessing.Process):
         self.__commandQ = commandQ
 
         self.mqttDataPrefix = config['mqtt_prefix']
+        self.mqttDataFormat = config['mqtt_format']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
         self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
         self._mqttConn.on_disconnect = self._on_disconnect
@@ -50,6 +66,13 @@ class MQTTClient(multiprocessing.Process):
 
     def publish(self, task):
         topic = "%s/%s/%s/R/%s" % (self.mqttDataPrefix, task['family'], task['deviceId'], task['param'])
+
+        if self.mqttDataFormat == 'json':
+            if is_number(task['payload']):
+                task['payload'] = '{"value": ' + str(task['payload']) + '}'
+            else:
+                task['payload'] = '{"value": "' + str(task['payload']) + '"}'
+
         try:
             self._mqttConn.publish(topic, payload=task['payload'])
             self.logger.debug('Sending:%s' % (task))
