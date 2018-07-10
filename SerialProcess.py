@@ -54,7 +54,7 @@ class SerialProcess(multiprocessing.Process):
                         val = float (int(d[key], 16)) / 10
                 elif key in self.processing_wdir:
                     # Integer value from 0-15, reflecting 0-360 degrees in 22.5 degree steps
-                    val = int(d[key], 16) * 22.5
+                    val = int(d[key], 10) * 22.5
                 else:
                     # Hexadecimal, division by 10
                     val = float (int(d[key], 16)) / 10
