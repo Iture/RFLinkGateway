@@ -32,6 +32,28 @@ Install the dependencies with the following commands:
 
 sudo python3 -m pip install pyserial paho-mqtt tornado
 
+## Start as a Service
+
+sudo nano /lib/systemd/system/rfLink2mqtt.service
+
+[Unit]
+Description=RFLink2MQTTBridge
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/RFLinkGateway/
+ExecStart=/usr/bin/python3 /home/pi/RFLinkGateway/RFLinkGateway.py
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl enable rfLink2mqtt.service
+
+
 ## Configuration
 
 Whole configuration is located in config.json file.
@@ -41,7 +63,7 @@ Whole configuration is located in config.json file.
   "mqtt_host": "your.mqtt.host",
   "mqtt_port": 1883,
   "mqtt_prefix": "/data/RFLINK",
-  "rflink_tty_device": "/dev/ttyUSB0",
+  "rflink_tty_device": "/dev/ttyACM0",
   "rflink_direct_output_params": ["BAT", "CMD", "SET_LEVEL", "SWITCH", "HUM", "CHIME", "PIR", "SMOKEALERT"]
 }
 ```
