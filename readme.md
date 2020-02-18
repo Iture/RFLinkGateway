@@ -27,6 +27,11 @@ Message:
 Every message received on particular MQTT topic is translated to
 RFLink Gateway and sent to 433 MHz.
 
+## Dependencies
+Install the dependencies with the following commands:
+
+sudo python3 -m pip install pyserial paho-mqtt tornado
+
 ## Configuration
 
 Whole configuration is located in config.json file.
