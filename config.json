@@ -4,6 +4,8 @@
   "mqtt_prefix": "/data/RFLINK",
   "mqtt_format": "json",
   "mqtt_message_timeout": 60,
+  "mqtt_user":"yourMqttUser",
+  "mqtt_password":"yourmqttpassword",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": [
     "BAT",
