@@ -32,6 +32,7 @@ class MQTTClient(multiprocessing.Process):
         self.mqttDataPrefix = config['mqtt_prefix']
         self.mqttDataFormat = config['mqtt_format']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
+        self._mqttConn.username_pw_set(config['mqtt_user'], config['mqtt_password'])
         self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
