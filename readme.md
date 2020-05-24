@@ -42,6 +42,33 @@ Message:
 Every message received on particular MQTT topic is translated to
 RFLink Gateway and sent to 433 MHz.
 
+## Dependencies
+Install the dependencies with the following commands:
+
+sudo python3 -m pip install pyserial paho-mqtt tornado
+
+## Start as a Service
+
+sudo nano /lib/systemd/system/rfLink2mqtt.service
+
+[Unit]
+Description=RFLink2MQTTBridge
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/RFLinkGateway/
+ExecStart=/usr/bin/python3 /home/pi/RFLinkGateway/RFLinkGateway.py
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl enable rfLink2mqtt.service
+
+
 ## Configuration
 
 Whole configuration is located in config.json file.
@@ -75,6 +102,12 @@ Application pushes informations to MQTT broker in following format:
 [mqtt_prefix]/[device_type]/[device_id]/R/[parameter]
 
 `/data/RFLINK/TriState/8556a8/R/1 OFF`
+
+Except if there its a CMD (Normally a signal from a switch), it is pushed to the following Topic:
+[mqtt_prefix]/[device_type]/[device_id]/[switch_id]/R/[parameter]
+like this, you only have to read the command message to use with devices with two or more switches
+
+`/data/RFLINK/NewKaku/0201e3fa/2/READ/CMD ON`
 
 Every change should be published to topic:
 [mqtt_prefix]/[device_type]/[device_id]/W/[switch_ID]

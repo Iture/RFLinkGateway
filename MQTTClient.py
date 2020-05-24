@@ -32,6 +32,7 @@ class MQTTClient(multiprocessing.Process):
         self.mqttDataPrefix = config['mqtt_prefix']
         self.mqttDataFormat = config['mqtt_format']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
+        self._mqttConn.username_pw_set(config['mqtt_user'], config['mqtt_password'])
         self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
@@ -65,14 +66,13 @@ class MQTTClient(multiprocessing.Process):
         self.__commandQ.put(data_out)
 
     def publish(self, task):
-        topic = "%s/%s/%s/R/%s" % (self.mqttDataPrefix, task['family'], task['deviceId'], task['param'])
-
+        topic = "%s/%s" % (self.mqttDataPrefix, task['topic'])
+  
         if self.mqttDataFormat == 'json':
             if is_number(task['payload']):
                 task['payload'] = '{"value": ' + str(task['payload']) + '}'
             else:
                 task['payload'] = '{"value": "' + str(task['payload']) + '"}'
-
         try:
             self._mqttConn.publish(topic, payload=task['payload'])
             self.logger.debug('Sending:%s' % (task))
