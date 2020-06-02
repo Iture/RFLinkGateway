@@ -5,10 +5,6 @@ import time
 import serial
 
 
-
-#TODO keepalive i obsluga resetu
-
-
 class SerialProcess(multiprocessing.Process):
     def __init__(self, messageQ, commandQ, config):
         self.logger = logging.getLogger('RFLinkGW.SerialProcessing')

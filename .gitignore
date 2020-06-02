@@ -6,4 +6,7 @@
 .idea/workspace.xml
 *.pyc
 RFLinkGateway.log
-RFLinkGateway.log
+bin
+lib
+include
+.Python

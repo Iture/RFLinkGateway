@@ -1,11 +1,11 @@
 {
-  "mqtt_host": "malinka.home",
+  "mqtt_host": "your_mqtt_host",
   "mqtt_port": 1883,
   "mqtt_prefix": "/data/RFLINK",
   "mqtt_format": "json",
   "mqtt_message_timeout": 60,
-  "mqtt_user":"yourMqttUser",
-  "mqtt_password":"yourmqttpassword",
+  "mqtt_user":"your_mqtt_user",
+  "mqtt_password":"your_mqtt_password",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": [
     "BAT",

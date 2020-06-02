@@ -14,10 +14,6 @@ import SerialProcess
 logger = logging.getLogger('RFLinkGW')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(funcName)s - %(levelname)s - %(message)s')
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('/var/log/RFLinkGateway.log')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
 
 ch = logging.StreamHandler()
 ch.setFormatter(formatter)

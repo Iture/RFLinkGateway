@@ -1,0 +1,14 @@
+[program:RFLinkGateway]
+command=/opt/scripts/RFLinkGateway/bin/python3 /opt/scripts/RFLinkGateway/RFLinkGateway.py
+user=root
+directory= /opt/scripts/RFLinkGateway
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/rflink-gateway-supervisor.log
+stdout_logfile_maxbytes=10000000
+stderr_logfile_maxbytes=10000000
+autostart=true
+autorestart=true
+environment=HOME="/opt/scripts/RFLinkGateway"
+stopasgroup=true
+killasgroup=true
+priority=10
