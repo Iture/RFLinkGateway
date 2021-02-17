@@ -130,9 +130,9 @@ like this, you only have to read the command message to use with devices with tw
 `/data/RFLINK/NewKaku/0201e3fa/2/READ/CMD ON`
 
 Every change should be published to topic:
-`[mqtt_prefix]/[device_type]/[device_id]/WRITE/[switch_ID]`
+`[mqtt_prefix]/[device_type]/[device_id]/W/[switch_ID]`
 
-`/data/RFLINK/TriState/8556a8/WRITE/1 ON`
+`/data/RFLINK/TriState/8556a8/W/1 ON`
 
 
 
