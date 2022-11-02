@@ -111,9 +111,16 @@ sudo systemctl daemon-reload
 sudo systemctl enable RFLinkGateway.service
 ```
 
+### Start as a docker container
+````Shell
+cd /opt/scripts/RFLinkGateway
+docker build --tag rflink .
+docker run --name rflinkgw -v /path/to/configfile:/app/config.json --device=/dev/ttyUSB0:/dev/ttyUSB0:rw rflink:latest
+````
+
 ### Logging
 Script logs to STDOUT, it can be redirected through supervisord to files or syslog.
-
+For docker you can use any driver (such a Loki).
 
 ## Output data
 
