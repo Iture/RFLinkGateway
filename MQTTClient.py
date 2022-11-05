@@ -34,12 +34,14 @@ class MQTTClient(multiprocessing.Process):
         self.mqttDataFormat = config['mqtt_format']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
         self._mqttConn.username_pw_set(config['mqtt_user'], config['mqtt_password'])
-        self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
 
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
         self._mqttConn.on_message = self._on_message
         self._mqttConn.on_connect = self._on_connect
+
+        self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
+
 
     def close(self) -> None:
         self.logger.info("Closing connection")
@@ -94,12 +96,12 @@ class MQTTClient(multiprocessing.Process):
             self.logger.error('Publish problem: %s' % (e))
             self.__messageQ.put(task)
 
-    def run(self) -> NoReturn:
+    def run(self):
         while True:
             if self.client_connected == False:
                 #TODO Add reconnection limit
                 time.sleep (1+2*self.connect_retry_counter)
-                self.logger.error('Reconnecting...')
+                self.logger.error('Reconnecting, try:%s' % (self.connect_retry_counter+1))
                 self._mqttConn.reconnect()
                 self.connect_retry_counter += 1    
             else:
