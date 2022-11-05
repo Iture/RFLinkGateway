@@ -6,7 +6,7 @@ import serial
 
 
 class SerialProcess(multiprocessing.Process):
-    def __init__(self, messageQ, commandQ, config):
+    def __init__(self, messageQ, commandQ, config) -> None:
         self.logger = logging.getLogger('RFLinkGW.SerialProcessing')
 
         self.logger.info("Starting...")
@@ -25,11 +25,11 @@ class SerialProcess(multiprocessing.Process):
 
         self.processing_wdir = config['rflink_wdir_output_params']
 
-    def close(self):
+    def close(self) -> None:
         self.sp.close()
         self.logger.debug('Serial closed')
 
-    def prepare_output(self, data_in):
+    def prepare_output(self, data_in) -> list:
         out = []
         data = data_in.decode("ascii").replace(";\r\n", "").split(";")
         self.logger.debug("Received message:%s" % (data))
@@ -80,7 +80,7 @@ class SerialProcess(multiprocessing.Process):
         self.logger.debug('Sending to serial:%s' % (out_str))
         return out_str
 
-    def connect(self):
+    def connect(self) -> None:
         self.logger.info('Connecting to serial')
         while not self.sp.isOpen():
             try:
