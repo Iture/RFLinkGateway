@@ -49,11 +49,10 @@ class MQTTClient(multiprocessing.Process):
         self._mqttConn.disconnect()
 
     def _on_connect(self,client,userdata,flags,rc) -> None:
-        if rc == 0:
-            self.client_connected = True
-            self.connect_retry_counter = 0
-            self.logger.info("Client connected")
-            self._mqttConn.subscribe("%s/+/+/WRITE/+" % self.mqttDataPrefix)
+        self.client_connected = True
+        self.connect_retry_counter = 0
+        self.logger.info("Client connected")
+        self._mqttConn.subscribe("%s/+/+/WRITE/+" % self.mqttDataPrefix)
 
 
     def _on_disconnect(self, client, userdata, rc) -> None:
