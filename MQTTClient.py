@@ -24,25 +24,26 @@ class MQTTClient(multiprocessing.Process):
     def __init__(self, messageQ, commandQ, config) -> None:
         self.logger = logging.getLogger('RFLinkGW.MQTTClient')
         self.logger.info("Starting...")
-
+        self.config=config
         multiprocessing.Process.__init__(self)
         self.__messageQ = messageQ
         self.__commandQ = commandQ
         self.client_connected = False
         self.connect_retry_counter = 0
-        self.mqttDataPrefix = config['mqtt_prefix']
-        self.mqttDataFormat = config['mqtt_format']
+        self.mqttDataPrefix = self.config['mqtt_prefix']
+        self.mqttDataFormat = self.config['mqtt_format']
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
-        self._mqttConn.username_pw_set(config['mqtt_user'], config['mqtt_password'])
+        self._mqttConn.username_pw_set(self.config['mqtt_user'], self.config['mqtt_password'])
 
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
         self._mqttConn.on_message = self._on_message
         self._mqttConn.on_connect = self._on_connect
+        self.connect(self.config)
+        
 
+    def connect (self,config):
         self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
-
-
     def close(self) -> None:
         self.logger.info("Closing connection")
         self._mqttConn.disconnect()
@@ -59,7 +60,7 @@ class MQTTClient(multiprocessing.Process):
         if rc != 0:
             self.logger.error("Unexpected disconnection.")
             self.client_connected = False
-            self._mqttConn.reconnect()
+            self.connect(self.config)
 
     def _on_publish(self, client, userdata, mid) -> None:
         self.logger.debug("Message " + str(mid) + " published.")
@@ -67,7 +68,7 @@ class MQTTClient(multiprocessing.Process):
     def _on_message(self, client, userdata, message) -> None:
         self.logger.debug("Message received: %s" % (message))
 
-        data = message.topic.replace(self.mqttDataPrefix + "/", "").split("/")
+        data = message.topic.replace(self.config['mqtt_prefix'] + "/", "").split("/")
         data_out = {
             'method': 'subscribe',
             'topic': message.topic,
@@ -80,8 +81,7 @@ class MQTTClient(multiprocessing.Process):
         self.__commandQ.put(data_out)
 
     def publish(self, task) -> None:
-        topic = "%s/%s" % (self.mqttDataPrefix, task['topic'])
-  
+        topic = "%s/%s" % (self.config['mqtt_prefix'], task['topic'])
         if self.mqttDataFormat == 'json':
             if is_number(task['payload']):
                 task['payload'] = '{"value": ' + str(task['payload']) + '}'
@@ -102,7 +102,7 @@ class MQTTClient(multiprocessing.Process):
                 #TODO Add reconnection limit
                 time.sleep (1+2*self.connect_retry_counter)
                 self.logger.error('Reconnecting, try:%s' % (self.connect_retry_counter+1))
-                self._mqttConn.reconnect()
+                self.connect(self.config)
                 self.connect_retry_counter += 1    
             else:
                 if not self.__messageQ.empty():
