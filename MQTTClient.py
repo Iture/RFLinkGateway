@@ -43,7 +43,10 @@ class MQTTClient(multiprocessing.Process):
         
 
     def connect (self,config):
-        self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
+        try:
+            result = self._mqttConn.connect(config['mqtt_host'], port=config['mqtt_port'], keepalive=120)
+        except:
+            self.logger.error("problem with connect:%s" % result)
     def close(self) -> None:
         self.logger.info("Closing connection")
         self._mqttConn.disconnect()
