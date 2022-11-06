@@ -106,11 +106,10 @@ class MQTTClient(multiprocessing.Process):
                 self.logger.error('Reconnecting, try:%s' % (self.connect_retry_counter+1))
                 self.connect(self.config)
                 self.connect_retry_counter += 1    
+            if not self.__messageQ.empty():
+                task = self.__messageQ.get()
+                if task['method'] == 'publish':
+                    self.publish(task)
             else:
-                if not self.__messageQ.empty():
-                    task = self.__messageQ.get()
-                    if task['method'] == 'publish':
-                        self.publish(task)
-                else:
-                    time.sleep(0.1)
+                time.sleep(0.1)
             self._mqttConn.loop()
