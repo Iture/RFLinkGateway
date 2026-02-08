@@ -25,6 +25,9 @@ class SerialProcess(multiprocessing.Process):
 
         self.processing_wdir = config['rflink_wdir_output_params']
 
+        self.ignored_devices = config.get('rflink_ignored_devices', [])
+        self.logger.debug("Ignored devices config: %s", self.ignored_devices)
+
     def close(self) -> None:
         self.sp.close()
         self.logger.debug('Serial closed')
@@ -36,6 +39,12 @@ class SerialProcess(multiprocessing.Process):
         if len(data) > 3 and data[0] == '20':
             family = data[2]
             deviceId = data[3].split("=")[1]
+            if self.is_device_ignored(family, deviceId):
+                self.logger.debug(
+                    "Ignoring RFLink device %s/%s" % (family, deviceId)
+                )
+                return []
+            
             switch = data[4].split("=")[1]
             d = {}
             for t in data[4:]:
@@ -112,3 +121,16 @@ class SerialProcess(multiprocessing.Process):
             except Exception as e:
                 self.logger.error('Receive error: %s' % (e))
                 self.connect()
+
+    def is_device_ignored(self, family, deviceId) -> bool:
+        family = family.lower()
+        deviceId = deviceId.lower()
+        for entry in self.ignored_devices:
+            if "/" in entry:
+                fam, dev = entry.split("/", 1)
+                if fam.lower() == family and dev.lower() == deviceId:
+                    return True
+            else:
+                if entry.lower() == family:
+                    return True
+        return False

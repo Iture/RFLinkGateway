@@ -6,6 +6,13 @@
   "mqtt_message_timeout": 60,
   "mqtt_user":"your_mqtt_user",
   "mqtt_password":"your_mqtt_password",
+  "mqtt_tls": false,
+  "mqtt_reject_unauthorized": false,
+  "mqtt_ca": "",
+  "mqtt_cert": "",
+  "mqtt_key": "",
+  "mqtt_replace_spaces": true,
+  "log_level": "DEBUG",
   "rflink_tty_device": "/dev/ttyUSB0",
   "rflink_direct_output_params": [
     "BAT",
@@ -24,5 +31,6 @@
   ],
   "rflink_wdir_output_params": [
     "WINDIR"
-  ]
+  ],
+  "rflink_ignored_devices": []
 }
