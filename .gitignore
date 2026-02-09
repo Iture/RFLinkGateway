@@ -10,3 +10,4 @@ bin
 lib
 include
 .Python
+.DS_Store

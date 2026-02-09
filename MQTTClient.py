@@ -1,6 +1,7 @@
 import logging
 import multiprocessing
 import time
+import ssl
 
 import paho.mqtt.client as mqtt
 
@@ -35,12 +36,33 @@ class MQTTClient(multiprocessing.Process):
         self._mqttConn = mqtt.Client(client_id='RFLinkGateway')
         self._mqttConn.username_pw_set(self.config['mqtt_user'], self.config['mqtt_password'])
 
+        if self.config.get('mqtt_tls', False):
+            self.logger.info("Enabling MQTT TLS")
+
+            cafile = self.config.get('mqtt_ca') or None
+            if not cafile:
+                raise ValueError("mqtt_tls is enabled but mqtt_ca is not set")
+            certfile = self.config.get('mqtt_cert') or None
+            keyfile = self.config.get('mqtt_key') or None
+
+            self._mqttConn.tls_set(
+                ca_certs=cafile,
+                certfile=certfile,
+                keyfile=keyfile ,
+                tls_version=ssl.PROTOCOL_TLS_CLIENT
+            )
+            reject = self.config.get('mqtt_reject_unauthorized', False)
+            self._mqttConn.tls_insecure_set(not reject)
+
+            self.logger.info(
+                "TLS reject_unauthorized=%s", reject
+            )
+        
         self._mqttConn.on_disconnect = self._on_disconnect
         self._mqttConn.on_publish = self._on_publish
         self._mqttConn.on_message = self._on_message
         self._mqttConn.on_connect = self._on_connect
         self.connect(self.config)
-        
 
     def connect (self,config) -> None:
         try:
@@ -84,6 +106,10 @@ class MQTTClient(multiprocessing.Process):
 
     def publish(self, task) -> None:
         topic = "%s/%s" % (self.config['mqtt_prefix'], task['topic'])
+
+        if self.config.get('mqtt_replace_spaces', False):
+            topic = topic.replace(" ", "_")
+
         if self.mqttDataFormat == 'json':
             if is_number(task['payload']):
                 task['payload'] = '{"value": ' + str(task['payload']) + '}'
